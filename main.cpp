@@ -19,6 +19,11 @@
  * - [x] load it from a file
  */
 
+auto constexpr BOLD = "\033[1m";
+auto constexpr STRIKEOUT = "\033[9m";
+auto constexpr BLUE = "\033[34m";
+auto constexpr RESET = "\033[0m";
+
 struct Task {
 	std::string description;
 	bool completed;
@@ -45,7 +50,7 @@ void addTask(TaskList& _tasks, Task _task)
 }
 
 /// Prints all tasks to an output stream.
-/// 
+///
 /// @param _tasks the task list to be printed.
 /// @param _output the target stream to print out the list of tasks.
 void printAllTasks(TaskList const& _tasks, std::ostream& _output)
@@ -60,11 +65,18 @@ void printAllTasks(TaskList const& _tasks, std::ostream& _output)
 		_output << i << ". ";
 
 		if (task.completed)
-			_output << "[x]";
+			_output << "✅";
 		else
-			_output << "[ ]";
+			_output << "  ";
 
-		_output << ' ' << task.description << '\n';
+        _output << ' ';
+
+        if (task.completed)
+            _output << STRIKEOUT;
+
+		_output << task.description;
+        _output << RESET;
+        _output << '\n';
 	}
 
 	_output << std::endl; // prints '\n' AND forces a flush
@@ -119,7 +131,7 @@ enum class Command { Invalid, Help, Add, Update, Toggle, Delete, List, Save, Qui
 
 Command getCommandInput()
 {
-	std::cout << "Command (type help for showing help): ";
+	std::cout << BOLD << BLUE << "Command (type help for showing help): " << RESET;
 	std::cout.flush();
 
 	std::string input;
